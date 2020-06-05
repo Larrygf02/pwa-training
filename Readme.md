@@ -10,3 +10,5 @@ Archivo que permite
 
 El service worker se ejecuta en segundo plano
 en un hilo separado
+
+* Service worker only working with https
