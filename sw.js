@@ -9,7 +9,8 @@ const assets = [
     "/css/materialize.min.css",
     "/css/styles.css",
     "/img/dish.png",
-    "https://fonts.googleapis.com/icon?family=Material+Icons"
+    "https://fonts.googleapis.com/icon?family=Material+Icons",
+    "/pages/fallback.html"
 ]
 // service worker se instala cada vez que cambia este archivo
 self.addEventListener('install', evt => {
@@ -26,7 +27,7 @@ self.addEventListener('activate', evt => {
     evt.waitUntil(
         caches.keys().then(keys => {
             return Promise.all(
-                keys.filter(key => key !== staticCacheName)
+                keys.filter(key => key !== staticCacheName && key !== dynamicCacheName)
                 .map(key => caches.delete(key))
             )
         })
@@ -46,6 +47,6 @@ self.addEventListener('fetch', evt => {
                     return fetchRes
                 })
             })
-        })
+        }).catch(() => caches.match('/pages/fallback.html'))
     )
 })
