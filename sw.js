@@ -1,4 +1,5 @@
 const staticCacheName = 'site-static-v3';
+const dynamicCacheName = 'site-dinamic-v1';
 const assets = [
     "/",
     "/index.html",
@@ -38,7 +39,13 @@ self.addEventListener('fetch', evt => {
         caches.match(evt.request).then(cacheRes => {
             // Si lo encuentra en cache devuelva cacheRes sino
             // llamara a la solicitud original
-            return cacheRes || fetch(evt.request)
+            return cacheRes || fetch(evt.request).then(fetchRes => {
+                // Guardar en cache
+                return caches.open(dynamicCacheName).then(cache => {
+                    cache.put(evt.request.url, fetchRes.clone())
+                    return fetchRes
+                })
+            })
         })
     )
 })
